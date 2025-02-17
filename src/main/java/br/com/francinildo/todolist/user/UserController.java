@@ -23,8 +23,12 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public List<UserModel> findAllUsers() {
-        return this.userRepository.findAll();
+    public ResponseEntity findAllUsers() {
+        List<UserModel> result = this.userRepository.findAll();
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao buscar usuários");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/")

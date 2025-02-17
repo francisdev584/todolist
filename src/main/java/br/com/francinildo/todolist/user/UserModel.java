@@ -27,5 +27,5 @@ public class UserModel {
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
-    private LocalDateTime UpdateAt;
+    private LocalDateTime UpdatedAt;
 }
