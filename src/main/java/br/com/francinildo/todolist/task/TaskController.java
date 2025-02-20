@@ -1,5 +1,6 @@
 package br.com.francinildo.todolist.task;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,18 @@ public class TaskController {
     public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest servletRequest) {
         var idUser = servletRequest.getAttribute("idUser");
         taskModel.setId((UUID)idUser);
+
+        // Validação de data
+        var currentDate = LocalDateTime.now();
+
+        if (currentDate.isAfter(taskModel.getStartAt()) || currentDate.isAfter(taskModel.getEndAt()) ) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de início/termino deve ser maior que a data atual");
+        }
+
+        if (taskModel.getStartAt().isAfter(taskModel.getEndAt())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de termino deve ser maior que a data de início");
+        }
+
         TaskModel taskCreated = this.taskRepository.save(taskModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCreated);
