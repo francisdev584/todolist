@@ -1,6 +1,7 @@
 package br.com.francinildo.todolist.task;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/tasks")
@@ -40,5 +44,12 @@ public class TaskController {
         TaskModel taskCreated = this.taskRepository.save(taskModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(taskCreated);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity list(HttpServletRequest servletRequest) {
+        var idUser = servletRequest.getAttribute("idUser");
+        var tasks = taskRepository.findByIdUser((UUID)idUser);
+        return ResponseEntity.ok().body(tasks);
     }
 }
